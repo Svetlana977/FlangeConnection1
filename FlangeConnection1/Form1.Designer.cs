@@ -29,7 +29,9 @@ namespace FlangeConnection1
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.paTitle = new Guna.UI2.WinForms.Guna2Panel();
+            this.buExit = new Guna.UI2.WinForms.Guna2Button();
             this.laTitle = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.paParams = new Guna.UI2.WinForms.Guna2Panel();
             this.buCalc = new Guna.UI2.WinForms.Guna2Button();
@@ -43,23 +45,54 @@ namespace FlangeConnection1
             this.paResults = new Guna.UI2.WinForms.Guna2Panel();
             this.richTB = new System.Windows.Forms.RichTextBox();
             this.laRaschet = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.buExit = new Guna.UI2.WinForms.Guna2Button();
+            this.buRVV = new Guna.UI2.WinForms.Guna2Button();
+            this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
+            this.buRF = new Guna.UI2.WinForms.Guna2Button();
+            this.buOKR = new Guna.UI2.WinForms.Guna2Button();
+            this.paParams2 = new Guna.UI2.WinForms.Guna2Panel();
+            this.buCalc2 = new Guna.UI2.WinForms.Guna2Button();
+            this.laParams2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.paParams3 = new Guna.UI2.WinForms.Guna2Panel();
+            this.buCalc3 = new Guna.UI2.WinForms.Guna2Button();
+            this.laParams3 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.paTitle.SuspendLayout();
             this.paParams.SuspendLayout();
             this.paResults.SuspendLayout();
+            this.paParams2.SuspendLayout();
+            this.paParams3.SuspendLayout();
             this.SuspendLayout();
             // 
             // paTitle
             // 
             this.paTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.paTitle.Controls.Add(this.buOKR);
+            this.paTitle.Controls.Add(this.buRF);
+            this.paTitle.Controls.Add(this.buRVV);
             this.paTitle.Controls.Add(this.buExit);
             this.paTitle.Controls.Add(this.laTitle);
             this.paTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.paTitle.Location = new System.Drawing.Point(0, 0);
             this.paTitle.Name = "paTitle";
             this.paTitle.ShadowDecoration.Parent = this.paTitle;
-            this.paTitle.Size = new System.Drawing.Size(800, 77);
+            this.paTitle.Size = new System.Drawing.Size(799, 77);
             this.paTitle.TabIndex = 0;
+            // 
+            // buExit
+            // 
+            this.buExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buExit.CheckedState.Parent = this.buExit;
+            this.buExit.CustomImages.Parent = this.buExit;
+            this.buExit.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.buExit.Font = new System.Drawing.Font("Segoe UI", 16F);
+            this.buExit.ForeColor = System.Drawing.Color.White;
+            this.buExit.HoverState.ForeColor = System.Drawing.Color.Red;
+            this.buExit.HoverState.Parent = this.buExit;
+            this.buExit.Location = new System.Drawing.Point(762, 0);
+            this.buExit.Name = "buExit";
+            this.buExit.ShadowDecoration.Parent = this.buExit;
+            this.buExit.Size = new System.Drawing.Size(37, 31);
+            this.buExit.TabIndex = 1;
+            this.buExit.Text = "X";
             // 
             // laTitle
             // 
@@ -77,6 +110,7 @@ namespace FlangeConnection1
             this.paParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
             this.paParams.BorderColor = System.Drawing.Color.Black;
             this.paParams.BorderThickness = 1;
+            this.paParams.Controls.Add(this.paParams2);
             this.paParams.Controls.Add(this.buCalc);
             this.paParams.Controls.Add(this.tbD);
             this.paParams.Controls.Add(this.tbS);
@@ -251,28 +285,138 @@ namespace FlangeConnection1
             this.laRaschet.TabIndex = 0;
             this.laRaschet.Text = "Расчеты";
             // 
-            // buExit
+            // buRVV
             // 
-            this.buExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buExit.CheckedState.Parent = this.buExit;
-            this.buExit.CustomImages.Parent = this.buExit;
-            this.buExit.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
-            this.buExit.Font = new System.Drawing.Font("Segoe UI", 16F);
-            this.buExit.ForeColor = System.Drawing.Color.White;
-            this.buExit.HoverState.ForeColor = System.Drawing.Color.Red;
-            this.buExit.HoverState.Parent = this.buExit;
-            this.buExit.Location = new System.Drawing.Point(763, 0);
-            this.buExit.Name = "buExit";
-            this.buExit.ShadowDecoration.Parent = this.buExit;
-            this.buExit.Size = new System.Drawing.Size(37, 31);
-            this.buExit.TabIndex = 1;
-            this.buExit.Text = "X";
+            this.buRVV.BackColor = System.Drawing.Color.Transparent;
+            this.buRVV.CheckedState.Parent = this.buRVV;
+            this.buRVV.CustomImages.Parent = this.buRVV;
+            this.buRVV.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
+            this.buRVV.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.buRVV.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buRVV.HoverState.Parent = this.buRVV;
+            this.buRVV.Location = new System.Drawing.Point(13, 21);
+            this.buRVV.Name = "buRVV";
+            this.buRVV.ShadowDecoration.Parent = this.buRVV;
+            this.buRVV.Size = new System.Drawing.Size(68, 40);
+            this.buRVV.TabIndex = 2;
+            this.buRVV.Text = "РВВ";
+            // 
+            // buRF
+            // 
+            this.buRF.BackColor = System.Drawing.Color.Transparent;
+            this.buRF.CheckedState.Parent = this.buRF;
+            this.buRF.CustomImages.Parent = this.buRF;
+            this.buRF.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
+            this.buRF.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.buRF.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buRF.HoverState.Parent = this.buRF;
+            this.buRF.Location = new System.Drawing.Point(87, 21);
+            this.buRF.Name = "buRF";
+            this.buRF.ShadowDecoration.Parent = this.buRF;
+            this.buRF.Size = new System.Drawing.Size(68, 40);
+            this.buRF.TabIndex = 3;
+            this.buRF.Text = "РФ";
+            // 
+            // buOKR
+            // 
+            this.buOKR.BackColor = System.Drawing.Color.Transparent;
+            this.buOKR.CheckedState.Parent = this.buOKR;
+            this.buOKR.CustomImages.Parent = this.buOKR;
+            this.buOKR.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
+            this.buOKR.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.buOKR.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.buOKR.HoverState.Parent = this.buOKR;
+            this.buOKR.Location = new System.Drawing.Point(161, 21);
+            this.buOKR.Name = "buOKR";
+            this.buOKR.ShadowDecoration.Parent = this.buOKR;
+            this.buOKR.Size = new System.Drawing.Size(68, 40);
+            this.buOKR.TabIndex = 4;
+            this.buOKR.Text = "ОКР";
+            // 
+            // paParams2
+            // 
+            this.paParams2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
+            this.paParams2.BorderColor = System.Drawing.Color.Black;
+            this.paParams2.BorderThickness = 1;
+            this.paParams2.Controls.Add(this.paParams3);
+            this.paParams2.Controls.Add(this.buCalc2);
+            this.paParams2.Controls.Add(this.laParams2);
+            this.paParams2.Location = new System.Drawing.Point(0, 0);
+            this.paParams2.Name = "paParams2";
+            this.paParams2.ShadowDecoration.Parent = this.paParams2;
+            this.paParams2.Size = new System.Drawing.Size(379, 373);
+            this.paParams2.TabIndex = 3;
+            // 
+            // buCalc2
+            // 
+            this.buCalc2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.buCalc2.CheckedState.Parent = this.buCalc2;
+            this.buCalc2.CustomImages.Parent = this.buCalc2;
+            this.buCalc2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.buCalc2.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.buCalc2.ForeColor = System.Drawing.Color.White;
+            this.buCalc2.HoverState.Parent = this.buCalc2;
+            this.buCalc2.Location = new System.Drawing.Point(92, 310);
+            this.buCalc2.Name = "buCalc2";
+            this.buCalc2.ShadowDecoration.Parent = this.buCalc2;
+            this.buCalc2.Size = new System.Drawing.Size(180, 45);
+            this.buCalc2.TabIndex = 2;
+            this.buCalc2.Text = "Расчет";
+            // 
+            // laParams2
+            // 
+            this.laParams2.BackColor = System.Drawing.Color.Transparent;
+            this.laParams2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.laParams2.Location = new System.Drawing.Point(124, 15);
+            this.laParams2.Name = "laParams2";
+            this.laParams2.Size = new System.Drawing.Size(148, 33);
+            this.laParams2.TabIndex = 0;
+            this.laParams2.Text = "Параметры";
+            // 
+            // paParams3
+            // 
+            this.paParams3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(226)))), ((int)(((byte)(240)))));
+            this.paParams3.BorderColor = System.Drawing.Color.Black;
+            this.paParams3.BorderThickness = 1;
+            this.paParams3.Controls.Add(this.buCalc3);
+            this.paParams3.Controls.Add(this.laParams3);
+            this.paParams3.Location = new System.Drawing.Point(0, 0);
+            this.paParams3.Name = "paParams3";
+            this.paParams3.ShadowDecoration.Parent = this.paParams3;
+            this.paParams3.Size = new System.Drawing.Size(379, 373);
+            this.paParams3.TabIndex = 4;
+            // 
+            // buCalc3
+            // 
+            this.buCalc3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.buCalc3.CheckedState.Parent = this.buCalc3;
+            this.buCalc3.CustomImages.Parent = this.buCalc3;
+            this.buCalc3.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(28)))));
+            this.buCalc3.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.buCalc3.ForeColor = System.Drawing.Color.White;
+            this.buCalc3.HoverState.Parent = this.buCalc3;
+            this.buCalc3.Location = new System.Drawing.Point(92, 310);
+            this.buCalc3.Name = "buCalc3";
+            this.buCalc3.ShadowDecoration.Parent = this.buCalc3;
+            this.buCalc3.Size = new System.Drawing.Size(180, 45);
+            this.buCalc3.TabIndex = 2;
+            this.buCalc3.Text = "Расчет";
+            // 
+            // laParams3
+            // 
+            this.laParams3.BackColor = System.Drawing.Color.Transparent;
+            this.laParams3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.laParams3.Location = new System.Drawing.Point(124, 15);
+            this.laParams3.Name = "laParams3";
+            this.laParams3.Size = new System.Drawing.Size(148, 33);
+            this.laParams3.TabIndex = 0;
+            this.laParams3.Text = "Параметры";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(799, 450);
             this.Controls.Add(this.paResults);
             this.Controls.Add(this.paParams);
             this.Controls.Add(this.paTitle);
@@ -285,6 +429,10 @@ namespace FlangeConnection1
             this.paParams.PerformLayout();
             this.paResults.ResumeLayout(false);
             this.paResults.PerformLayout();
+            this.paParams2.ResumeLayout(false);
+            this.paParams2.PerformLayout();
+            this.paParams3.ResumeLayout(false);
+            this.paParams3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -306,6 +454,16 @@ namespace FlangeConnection1
         private Guna.UI2.WinForms.Guna2HtmlLabel laRaschet;
         private Guna.UI2.WinForms.Guna2Button buCalc;
         private Guna.UI2.WinForms.Guna2Button buExit;
+        private Guna.UI2.WinForms.Guna2Button buRVV;
+        private Guna.UI2.WinForms.Guna2AnimateWindow guna2AnimateWindow1;
+        private Guna.UI2.WinForms.Guna2Button buRF;
+        private Guna.UI2.WinForms.Guna2Button buOKR;
+        private Guna.UI2.WinForms.Guna2Panel paParams2;
+        private Guna.UI2.WinForms.Guna2Button buCalc2;
+        private Guna.UI2.WinForms.Guna2HtmlLabel laParams2;
+        private Guna.UI2.WinForms.Guna2Panel paParams3;
+        private Guna.UI2.WinForms.Guna2Button buCalc3;
+        private Guna.UI2.WinForms.Guna2HtmlLabel laParams3;
     }
 }
 

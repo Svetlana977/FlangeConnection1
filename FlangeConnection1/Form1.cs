@@ -50,8 +50,112 @@ namespace FlangeConnection1
             SetControls();
             SetParams();
             CalcConstructionSize(S, D);
+            buOKR.Checked = true;
+            buRVV.Checked = true;
+            buRF.Checked = true;
             buCalc.Click += BuCalc_Click;
             buExit.Click += (s, e) => Application.Exit();
+            buRVV.Click += BuRVV_Click;
+            buRVV.CheckedChanged += BuRVV_CheckedChanged;
+            buOKR.Click += BuOKR_Click;
+            buOKR.CheckedChanged += BuOKR_CheckedChanged;
+            buRF.Click += BuRF_Click;
+            buRF.CheckedChanged += BuRF_CheckedChanged;
+        }
+        // смена вкладки на РФ
+        private void BuRF_CheckedChanged(object sender, EventArgs e)
+        {
+            if (buRF.Checked)
+            {
+                paParams3.BringToFront();
+                laParams3.BringToFront();
+                buCalc3.BringToFront();
+            }
+        }
+
+        // расчет фланца, работающего под внутренним давлением
+        private void BuRF_Click(object sender, EventArgs e)
+        {
+            buRF.Checked = true;
+            buOKR.Checked = false;
+            buRVV.Checked = false;
+            laParams3.Visible = true; 
+            laParams.Visible = false;
+            laParams2.Visible = false;
+            buCalc3.Visible = true;
+            buCalc.Visible = false;
+            buCalc2.Visible = false;
+            laD.Visible = false;
+            laP.Visible = false;
+            laS.Visible = false;
+            tbD.Visible = false;
+            tbP.Visible = false;
+            tbS.Visible = false;
+        }
+        // смена вкладки на ОКР
+        private void BuOKR_CheckedChanged(object sender, EventArgs e)
+        {
+            if (buOKR.Checked)
+            {
+                paParams.BringToFront();
+                laParams.BringToFront();
+                buCalc.BringToFront();
+                laD.BringToFront();
+                laP.BringToFront();
+                laS.BringToFront();
+                tbD.BringToFront();
+                tbP.BringToFront();
+                tbS.BringToFront();
+            }
+        }
+        // определение конструктивных размеров
+        private void BuOKR_Click(object sender, EventArgs e)
+        {
+            buOKR.Checked = true;
+            buRVV.Checked = false;
+            buRF.Checked = false;
+            laParams.Visible = true;
+            laParams2.Visible = false;
+            laParams3.Visible = false;
+            buCalc.Visible = true;
+            buCalc3.Visible = false;
+            buCalc2.Visible = false;
+            laD.Visible = true;
+            laP.Visible = true;
+            laS.Visible = true;
+            tbD.Visible = true;
+            tbP.Visible = true;
+            tbS.Visible = true;
+        }
+        // смена вкладки на РВВ
+        private void BuRVV_CheckedChanged(object sender, EventArgs e)
+        {
+            if (buRVV.Checked)
+            {
+                paParams2.BringToFront();
+                laParams2.BringToFront();
+                buCalc2.BringToFront();
+            }
+        }
+
+        // расчет вспомогательных величин
+        private void BuRVV_Click(object sender, EventArgs e)
+        {
+            buRVV.Checked = true;
+            buOKR.Checked = false;
+            buRF.Checked = false;
+            laParams2.Visible = true;
+            laParams.Visible = false;
+            laParams3.Visible = false;
+            buCalc2.Visible = true;
+            buCalc.Visible = false;
+            buCalc3.Visible = false;
+            laD.Visible = false;
+            laP.Visible = false;
+            laS.Visible = false;
+            tbD.Visible = false;
+            tbP.Visible = false;
+            tbS.Visible = false;
         }
 
         // выполнить расчет
@@ -68,12 +172,20 @@ namespace FlangeConnection1
             // заголовок
             paTitle.BackColor = Color.FromArgb(23, 24, 28);
             laTitle.ForeColor = Color.White;
-            laTitle.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - laTitle.Width / 2, paddingY);
+            laTitle.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - laTitle.Width / 15, paddingY);
             // левая панель
             paParams.Size = new Size(Screen.PrimaryScreen.Bounds.Width/3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
             paParams.BackColor = Color.FromName("#f5f7ff");
             paParams.Location = new Point(0, paTitle.Height);
             laParams.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
+            paParams2.Size = new Size(Screen.PrimaryScreen.Bounds.Width/3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
+            paParams2.BackColor = Color.FromName("#f5f7ff");
+            paParams2.Location = new Point(0, 0);
+            laParams2.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
+            paParams3.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
+            paParams3.BackColor = Color.FromName("#f5f7ff");
+            paParams3.Location = new Point(0, 0);
+            laParams3.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
             laD.Location = new Point(paddingX, laParams.Location.Y + paddingY*2 + laParams.Height);
             laP.Location = new Point(paddingX, laD.Location.Y + paddingY*2 + laD.Height);
             laS.Location = new Point(paddingX, laP.Location.Y + paddingY*2 + laP.Height);
@@ -81,6 +193,8 @@ namespace FlangeConnection1
             tbP.Location = new Point(paParams.Width - tbD.Width - paddingX, laD.Location.Y + paddingY * 2 + laD.Height - tbD.Height / 8);
             tbS.Location = new Point(paParams.Width - tbD.Width - paddingX, laP.Location.Y + paddingY * 2 + laP.Height - tbD.Height / 8);
             buCalc.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
+            buCalc2.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
+            buCalc3.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
             // правая панель
             paResults.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3 * 2, paParams.Height);
             paResults.Dock = DockStyle.Right;
@@ -88,6 +202,18 @@ namespace FlangeConnection1
             laRaschet.Location = new Point(paResults.Width / 2 - laRaschet.Width / 2, paddingY);
             richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, paParams.Height / 4 * 3);
             richTB.Location = new Point(paResults.Width / 2 - richTB.Width / 2, laRaschet.Location.Y + laRaschet.Height + paddingY);
+            // кнопка расчета конструктивных размеров 
+            buOKR.FillColor = Color.FromArgb(223, 226, 240);
+            buOKR.ForeColor = Color.FromName("#f5f7ff");
+            buOKR.Location = new Point(paTitle.Width / 4 - buRVV.Width - buRVV.Width / 2, paTitle.Height / 4);
+            // кнопка расчета вспомогательных величин
+            buRVV.FillColor = Color.FromArgb(223, 226, 240);
+            buRVV.ForeColor = Color.FromName("#f5f7ff");
+            buRVV.Location = new Point(paTitle.Width / 4, paTitle.Height / 4);
+            // кнопка расчета фланца, работающего под внутренним давлением
+            buRF.FillColor = Color.FromArgb(223, 226, 240);
+            buRF.ForeColor = Color.FromName("#f5f7ff");
+            buRF.Location = new Point(paTitle.Width / 4 + buRVV.Width + buRVV.Width / 2, paTitle.Height / 4);
         }
 
         // выполнение расчетов
