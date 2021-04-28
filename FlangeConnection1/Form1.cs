@@ -21,6 +21,13 @@ namespace FlangeConnection1
         private float Secvivalent; // эквивалентная толщина втулки фланца
         private float bp = (float)(15 / 1e3); // ширина прокладки
         private float tb = (float)(100 / 1e3); // шаг болтов
+        private float p = 1/10; // расчетное избыточное давление
+        private float b0 = 6; // эффективная ширина прокладки
+        private float m = 25;
+        private float n = 8; // число болтов
+        private float fб = 235* (float)Math.Pow(10, -6); // площидь поперечного сечения болта внутри
+        private float Eб = 195* (float)Math.Pow(10, 9); // линейная податливость болта
+        //private float ; // 
 
         public float Db { get; private set; }
         public float Df { get; private set; }
@@ -42,122 +49,21 @@ namespace FlangeConnection1
         private float lyambda;
         private int paddingY = 20; // отступ по оси Y
         private int paddingX = 30; // отступ по оси Х
+        private Calc calc;
 
         public Form1()
         {
             InitializeComponent();
 
+            calc = new Calc();
+
             SetControls();
             SetParams();
             CalcConstructionSize(S, D);
-            buOKR.Checked = true;
-            buRVV.Checked = true;
-            buRF.Checked = true;
             buCalc.Click += BuCalc_Click;
             buExit.Click += (s, e) => Application.Exit();
-            buRVV.Click += BuRVV_Click;
-            buRVV.CheckedChanged += BuRVV_CheckedChanged;
-            buOKR.Click += BuOKR_Click;
-            buOKR.CheckedChanged += BuOKR_CheckedChanged;
-            buRF.Click += BuRF_Click;
-            buRF.CheckedChanged += BuRF_CheckedChanged;
-        }
-        // смена вкладки на РФ
-        private void BuRF_CheckedChanged(object sender, EventArgs e)
-        {
-            if (buRF.Checked)
-            {
-                paParams3.BringToFront();
-                laParams3.BringToFront();
-                buCalc3.BringToFront();
-            }
-        }
 
-        // расчет фланца, работающего под внутренним давлением
-        private void BuRF_Click(object sender, EventArgs e)
-        {
-            buRF.Checked = true;
-            buOKR.Checked = false;
-            buRVV.Checked = false;
-            laParams3.Visible = true; 
-            laParams.Visible = false;
-            laParams2.Visible = false;
-            buCalc3.Visible = true;
-            buCalc.Visible = false;
-            buCalc2.Visible = false;
-            laD.Visible = false;
-            laP.Visible = false;
-            laS.Visible = false;
-            tbD.Visible = false;
-            tbP.Visible = false;
-            tbS.Visible = false;
         }
-        // смена вкладки на ОКР
-        private void BuOKR_CheckedChanged(object sender, EventArgs e)
-        {
-            if (buOKR.Checked)
-            {
-                paParams.BringToFront();
-                laParams.BringToFront();
-                buCalc.BringToFront();
-                laD.BringToFront();
-                laP.BringToFront();
-                laS.BringToFront();
-                tbD.BringToFront();
-                tbP.BringToFront();
-                tbS.BringToFront();
-            }
-        }
-        // определение конструктивных размеров
-        private void BuOKR_Click(object sender, EventArgs e)
-        {
-            buOKR.Checked = true;
-            buRVV.Checked = false;
-            buRF.Checked = false;
-            laParams.Visible = true;
-            laParams2.Visible = false;
-            laParams3.Visible = false;
-            buCalc.Visible = true;
-            buCalc3.Visible = false;
-            buCalc2.Visible = false;
-            laD.Visible = true;
-            laP.Visible = true;
-            laS.Visible = true;
-            tbD.Visible = true;
-            tbP.Visible = true;
-            tbS.Visible = true;
-        }
-        // смена вкладки на РВВ
-        private void BuRVV_CheckedChanged(object sender, EventArgs e)
-        {
-            if (buRVV.Checked)
-            {
-                paParams2.BringToFront();
-                laParams2.BringToFront();
-                buCalc2.BringToFront();
-            }
-        }
-
-        // расчет вспомогательных величин
-        private void BuRVV_Click(object sender, EventArgs e)
-        {
-            buRVV.Checked = true;
-            buOKR.Checked = false;
-            buRF.Checked = false;
-            laParams2.Visible = true;
-            laParams.Visible = false;
-            laParams3.Visible = false;
-            buCalc2.Visible = true;
-            buCalc.Visible = false;
-            buCalc3.Visible = false;
-            laD.Visible = false;
-            laP.Visible = false;
-            laS.Visible = false;
-            tbD.Visible = false;
-            tbP.Visible = false;
-            tbS.Visible = false;
-        }
-
         // выполнить расчет
         private void BuCalc_Click(object sender, EventArgs e)
         {
@@ -178,14 +84,6 @@ namespace FlangeConnection1
             paParams.BackColor = Color.FromName("#f5f7ff");
             paParams.Location = new Point(0, paTitle.Height);
             laParams.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
-            paParams2.Size = new Size(Screen.PrimaryScreen.Bounds.Width/3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
-            paParams2.BackColor = Color.FromName("#f5f7ff");
-            paParams2.Location = new Point(0, 0);
-            laParams2.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
-            paParams3.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
-            paParams3.BackColor = Color.FromName("#f5f7ff");
-            paParams3.Location = new Point(0, 0);
-            laParams3.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
             laD.Location = new Point(paddingX, laParams.Location.Y + paddingY*2 + laParams.Height);
             laP.Location = new Point(paddingX, laD.Location.Y + paddingY*2 + laD.Height);
             laS.Location = new Point(paddingX, laP.Location.Y + paddingY*2 + laP.Height);
@@ -193,8 +91,6 @@ namespace FlangeConnection1
             tbP.Location = new Point(paParams.Width - tbD.Width - paddingX, laD.Location.Y + paddingY * 2 + laD.Height - tbD.Height / 8);
             tbS.Location = new Point(paParams.Width - tbD.Width - paddingX, laP.Location.Y + paddingY * 2 + laP.Height - tbD.Height / 8);
             buCalc.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
-            buCalc2.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
-            buCalc3.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
             // правая панель
             paResults.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3 * 2, paParams.Height);
             paResults.Dock = DockStyle.Right;
@@ -202,21 +98,10 @@ namespace FlangeConnection1
             laRaschet.Location = new Point(paResults.Width / 2 - laRaschet.Width / 2, paddingY);
             richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, paParams.Height / 4 * 3);
             richTB.Location = new Point(paResults.Width / 2 - richTB.Width / 2, laRaschet.Location.Y + laRaschet.Height + paddingY);
-            // кнопка расчета конструктивных размеров 
-            buOKR.FillColor = Color.FromArgb(223, 226, 240);
-            buOKR.ForeColor = Color.FromName("#f5f7ff");
-            buOKR.Location = new Point(paTitle.Width / 4 - buRVV.Width - buRVV.Width / 2, paTitle.Height / 4);
-            // кнопка расчета вспомогательных величин
-            buRVV.FillColor = Color.FromArgb(223, 226, 240);
-            buRVV.ForeColor = Color.FromName("#f5f7ff");
-            buRVV.Location = new Point(paTitle.Width / 4, paTitle.Height / 4);
-            // кнопка расчета фланца, работающего под внутренним давлением
-            buRF.FillColor = Color.FromArgb(223, 226, 240);
-            buRF.ForeColor = Color.FromName("#f5f7ff");
-            buRF.Location = new Point(paTitle.Width / 4 + buRVV.Width + buRVV.Width / 2, paTitle.Height / 4);
+            
         }
 
-        // выполнение расчетов
+        // определение конструктивных размеров
         private void CreateReport()
         {
             // очищение richTextBox
@@ -276,9 +161,36 @@ namespace FlangeConnection1
             BottomIndex(1);
             richTB.AppendText($" = {Zb} шт.\n");
             richTB.AppendText($"Ориентировочная толщина фланца: h = {h} м\n");
+
+            //Расчет 3
+            richTB.Font = new Font("SegoeUI", 12);
+            richTB.AppendText("Расчет фланца, работающего под внутренним давлением\n");
+            // выделение заголовка и изменение положения и размера
+            SelectRichText(richTB, "Расчет фланца, работающего под внутренним давлением");
+            richTB.SelectionFont = new Font("", 16);
+            richTB.SelectionAlignment = HorizontalAlignment.Center;
+            //1. Определение нагрузок, действующих на фланец.
+            richTB.AppendText("1. Определение нагрузок, действующих на фланец\n");
+            SelectRichText(richTB, "1. Определение нагрузок, действующих на фланец");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Underline);
+            //равнодействующая внутреннего давления
+            richTB.AppendText($"Равнодействующая внутреннего давления\n");
+            richTB.AppendText($"Реакция прокладки в рабочих условиях\n");
+            richTB.AppendText($"Усилие, возникающее от температурных деформаций\n");
+            richTB.AppendText($"Кэффициенты линейного расширения\n");
+            richTB.AppendText($"Болтовая нагрузка в условиях монтажа до подачи внутреннего давления\n");
+            richTB.AppendText($"Коэффициент запаса прочности для болтов\n");
+            richTB.AppendText($"Предел текучести материала болтов при 20 град.\n");
+            richTB.AppendText($"Допускаемое напряжение материала болтов\n");
+            richTB.AppendText($"Болтовая нагрузка в рабочих условиях\n");
+            richTB.AppendText($"Приведенный изгибающий момент\n");
+            richTB.AppendText($"Предел текучести материала болтов при 62 град.\n");
+            richTB.AppendText($"Допускаемое напряжение болтов\n");
         }
 
-        // подстрочный знак
+       
+
+            // подстрочный знак
         private void BottomIndex(int v)
         {
             richTB.Select(richTB.TextLength - v, v);
@@ -316,7 +228,7 @@ namespace FlangeConnection1
         private void CalcConstructionSize(float s, float d)
         {
             // меньшая толщина конической втулки фланца
-            S0 = CalcS0(S);
+            S0 = calc.CalcS0(S);
             if (S0 == -1)
             {
                 MessageBox.Show("Введите другое значение толщины стенки");
@@ -326,101 +238,34 @@ namespace FlangeConnection1
             Secvivalent = S0;
 
             // диаметр болтовой окружности
-            Db = CalcDb(d, S0, db);
+            Db = calc.CalcDb(d, S0, db);
 
             // наружный диаметр фланца
-            Df = CalcDf(Db, alfa);
+            Df = calc.CalcDf(Db, alfa);
 
             // наружный диаметр прокладки
-            Dp = CalcDp(Db, e1);
+            Dp = calc.CalcDp(Db, e1);
 
             // средний диаметр прокладки
-            Dcp = CalcDcp(Dp, bp);
+            Dcp = calc.CalcDcp(Dp, bp);
 
             // эффективная ширина прокладки
-            be = Calcbe(bp);
+            be = calc.Calcbe(bp);
 
             // ориентировочное число болтов
-            ZbOrientir = CalcZb(Db, tb);
+            ZbOrientir = calc.CalcZb(Db, tb);
 
             // окончательное число болтов
-            Zb = CalcFinallyZb(ZbOrientir);
+            Zb = calc.CalcFinallyZb(ZbOrientir);
 
             // определение коэффициента лямбда
-            lyambda = CalcLyambda();
+            lyambda = calc.CalcLyambda();
 
             // ориентировочная толщина фланца
-            h = Calch(lyambda, Secvivalent, d);
+            h = calc.Calch(lyambda, Secvivalent, d);
 
         }
 
-        // определение коэффициента лямбда
-        private float CalcLyambda()
-        {
-            return (float)0.5;
-        }
-
-        // ориентировочная толщина фланца
-        private float Calch(float lyambda, float secvivalent, float d)
-        {
-            return (float)(lyambda * Math.Sqrt(d * secvivalent));
-        }
-
-        // окончательное число болтов
-        private int CalcFinallyZb(float zb)
-        {
-            zb = Convert.ToInt32(Math.Ceiling(zb));
-            while (zb % 4 != 0)
-                zb++;
-            return (int)zb;
-        }
-
-        // ориентировочное число болтов
-        private float CalcZb(float db, float tb)
-        {
-            return (float)(Math.PI * db / tb);
-        }
-
-        // эффективная ширина прокладки
-        private float Calcbe(float bp)
-        {
-            return (float)(0.5 * bp);
-        }
-
-        // средний диаметр прокладки
-        private float CalcDcp(float dp, float bp)
-        {
-            return dp - bp;
-        }
-
-        // наружный диаметр прокладки
-        private float CalcDp(float db, float e1)
-        {
-            return db - e1;
-        }
-
-        // наружный диаметр фланца
-        private float CalcDf(float db, float alfa)
-        {
-            return db + alfa;
-        }
-
-        // диаметр болтовой окружности
-        private float CalcDb(float d, float s0, float db)
-        {
-            return (float)(Math.Ceiling((d + 2 * (2 * s0 + db + 0.006))*1e2)/1e2);
-        }
-
-
-        // меньшая толщина конической втулки фланца
-        private float CalcS0(float s)
-        {
-            if ((float)(s * 1.35) - s <= 0.005)
-            {
-                return (float)(Math.Round(s * 1.35 * 1e3)/1e3);
-            }
-            else
-                return -1;
-        }
+        
     }
 }
