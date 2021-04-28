@@ -22,8 +22,6 @@ namespace FlangeConnection1
         private float bp = (float)(15 / 1e3); // ширина прокладки
         private float tb = (float)(100 / 1e3); // шаг болтов
         private float p = 1/10; // расчетное избыточное давление
-        private float b0 = 6; // эффективная ширина прокладки
-        private float m = 25;
         private float n = 8; // число болтов
         private float fб = 235* (float)Math.Pow(10, -6); // площидь поперечного сечения болта внутри
         private float Eб = 195* (float)Math.Pow(10, 9); // линейная податливость болта
@@ -51,6 +49,39 @@ namespace FlangeConnection1
         private int paddingX = 30; // отступ по оси Х
         private Calc calc;
 
+        //безразмерные параметры фланцевого соединения
+        private float j;
+        private float K;
+        private float psi1;
+        private float psi2;
+        private float omega;
+        private double E = 2.15 * Math.Pow(10,11);
+        // угловая податливость фланца
+        private float Yf;
+        // основные параметры прокладок
+        private double m = 2.5;
+        private double hp = 0.003;
+        private double q = 20 * Math.Pow(10, 6);
+        private double qdop = 130 * Math.Pow(10, 6);
+        private double Ep = 130 * Math.Pow(10, 6);
+        private double Kp = 1;
+        private double b = 12 * Math.Pow(10, -3);
+        private double b0; // эффективная ширина прокладки
+        private float Yp; // линейная податливость прокладки
+        private double pi = 3.14;
+        // основные параметры болтов
+        private float lbo;
+        private float lb;
+        private double fb = 2.35 * Math.Pow(10, -4);
+        private double Eb = 1.95 * Math.Pow(10, 11);
+        private double yb;
+        // коэффициент жесткости фланцевых соединений
+        private float A;
+        private float B1;
+        private float B2;
+        private float alf;
+        
+
         public Form1()
         {
             InitializeComponent();
@@ -60,6 +91,7 @@ namespace FlangeConnection1
             SetControls();
             SetParams();
             CalcConstructionSize(S, D);
+            CalcAdditionalSize(S, D);
             buCalc.Click += BuCalc_Click;
             buExit.Click += (s, e) => Application.Exit();
 
@@ -69,6 +101,7 @@ namespace FlangeConnection1
         {
             SetParams();
             CalcConstructionSize(S, D);
+            CalcAdditionalSize(S, D);
             CreateReport();
         }
 
@@ -114,8 +147,8 @@ namespace FlangeConnection1
             richTB.SelectionFont = new Font("", 16);
             richTB.SelectionAlignment = HorizontalAlignment.Center;
             // выделение подзаголовка, задание стилей
-            richTB.AppendText("Определение конструктивных размеров\n");
-            SelectRichText(richTB, "Определение конструктивных размеров");
+            richTB.AppendText("1. Определение конструктивных размеров\n");
+            SelectRichText(richTB, "1. Определение конструктивных размеров");
             richTB.SelectionFont = new Font("", 12, FontStyle.Underline);
             // добавление расчета в richTextBox
             richTB.AppendText($"Меньшая толщина конической втулки фланца: S₀ = {S0} м\n");
@@ -161,6 +194,65 @@ namespace FlangeConnection1
             BottomIndex(1);
             richTB.AppendText($" = {Zb} шт.\n");
             richTB.AppendText($"Ориентировочная толщина фланца: h = {h} м\n");
+
+
+
+            // расчет вспомогательных величин
+            richTB.AppendText("2. Расчет вспомогательных величин\n");
+            SelectRichText(richTB, "2. Расчет вспомогательных величин");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Underline);
+
+            // основные параметры фланцевого соединения
+            richTB.AppendText("2.1 Основные параметры фланцевого соединения\n");
+            SelectRichText(richTB, "2.1 Основные параметры фланцевого соединения");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Regular);
+
+            richTB.AppendText("Безразмерные параметры:\n");
+            richTB.AppendText($"λ = {lyambda}\n");
+            richTB.AppendText($"j = {j}\n");
+            richTB.AppendText($"K = {K}\n");
+            richTB.AppendText($"ψ1 = {psi1}\n");
+            richTB.AppendText($"ψ2 = {psi2}\n");
+            richTB.AppendText($"ω = {omega}\n");
+            richTB.AppendText($"Модуль продольной упругости: E = {E} Па\n");
+            richTB.AppendText($"Угловая податливость фланца: Yф = {Yf}\n");
+
+            // основные параметры прокладок
+            richTB.AppendText("2.2 Основные параметры прокладок\n");
+            SelectRichText(richTB, "2.2 Основные параметры прокладок");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Regular);
+
+            richTB.AppendText("Эффективная ширина прокладки при b ≤ 1,5 см\n");
+            richTB.AppendText($"b = {b0}\n");;
+            richTB.AppendText($"Выбираем прокладку из картона асбестового по ГОСТ 2850-75 при толщине\n" + $"hп = {hp} M\n");
+            richTB.AppendText($"Коэффициент m = {m}\n");
+            richTB.AppendText($"Минимальное удельное давление q = {q} Па\n");
+            richTB.AppendText($"Допускаемое удельное давление qдоп = {qdop} Па\n");
+            richTB.AppendText($"Модуль упругости Eп = {Ep}\n");
+            richTB.AppendText($"Коэффициент обжатия прокладки: Кп = {Kp}\n");
+            richTB.AppendText($"Линейная податливость прокладки: Yп = {Yp}\n");
+
+            // основные параметры болтов
+            richTB.AppendText("2.3 Основные параметры болтов\n");
+            SelectRichText(richTB, "2.3 Основные параметры болтов");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Regular);
+
+            richTB.AppendText($"Расчётная длина болта: lбo = {lbo} М, где lб = {lb} М\n");
+            richTB.AppendText("Площадь поперечного сечения болта M20 по внутреннему диаметру резьбы:\n"+ $"fб = {fb} м^2\n");
+            richTB.AppendText("Линейная податливость болтов:\n" + $"Eб = {Eb} Па\n" + $"yб = {yb}\n");
+
+            // коэффициент жесткости фланцевых соединений
+            richTB.AppendText("2.4 Коэффициент жесткости фланцевых соединений\n");
+            SelectRichText(richTB, "2.4 Коэффициент жесткости фланцевых соединений");
+            richTB.SelectionFont = new Font("", 12, FontStyle.Regular);
+
+
+            richTB.AppendText($"A = {A}\n");
+            richTB.AppendText($"B1 = {B1}\n" + $"B2 = {B2}\n");
+            richTB.AppendText($"При стыковке одинаковых фланцев коэффициент жесткости фланцевых соединений α = {alf}\n");
+
+
+
 
             //Расчет 3
             richTB.Font = new Font("SegoeUI", 12);
@@ -266,6 +358,45 @@ namespace FlangeConnection1
 
         }
 
-        
+        // расчет вспомогательных величин
+        private void CalcAdditionalSize(float s, float d)
+        {
+            // основные параметры фланцевого соединения
+            // безразмерные параметры
+            j = calc.CalcJ(h, Secvivalent);
+
+            K = calc.CalcK(Df, D);
+
+            psi1 = calc.CalcPsi1(K);
+
+            psi2 = calc.CalcPsi2(K);
+
+            omega = calc.CalcOmega(lyambda, psi1, j);
+            // угловая податливость фланца
+            Yf = calc.CaclYf(omega, lyambda, psi2, h, E);
+
+            // основные параметры прокладок
+            // эффективная ширина прокладки при b ≤ 1,5 см
+            b0 = calc.CaclB0(b);
+            // линейная податливость прокладки
+            Yp = calc.CalcYp(hp, Kp, Ep, b, Dcp, pi);
+
+
+            // основные параметры болтов
+            // расчётная длина болта
+            lbo = calc.CalcLbo(h, hp);
+            lb = calc.CalcLb(lb, D);
+            // линейная податливость болтов
+            yb = calc.CalcYb(lb,Eb,fb,n);
+
+            // коэффициент жесткости фланцевых соединений при стыковке одинаковых фланцев Yf1 = Yf2 = Yf и D1 = D2 = D, B1 = B2
+            A = calc.CalcA(Yp, yb, Yf, Db, Dcp);
+            B1 = calc.CalcB1(Yf, Db, D, Secvivalent);
+            B2 = calc.CalcB2(B1);
+            alf = calc.CalcAlf(A, yb, B1, B2, Db, Dcp);
+
+
+        }
+
     }
 }

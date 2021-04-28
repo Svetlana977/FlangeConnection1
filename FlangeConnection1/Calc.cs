@@ -8,6 +8,7 @@ namespace FlangeConnection1
 {
    public class Calc
     {
+        
         // определение коэффициента лямбда
         public float CalcLyambda()
         {
@@ -75,6 +76,94 @@ namespace FlangeConnection1
             }
             else
                 return -1;
+        }
+
+        //безразмерные параметры фланцевого соединения
+        // определение j
+        internal float CalcJ(float h, float secvivalent)
+        {
+            return (float)(h / secvivalent);
+        }
+        // определение K
+        internal float CalcK(float df, float d)
+        {
+            return (float)(df / d);
+        }
+
+        // определение ψ1 
+        internal float CalcPsi1(float k)
+        {
+            return (float)(1.28 * Math.Log10(k));
+        }
+
+        // определение ψ2
+        internal float CalcPsi2(float k)
+        {
+            return (float)((k+1)/(k-1));
+        }
+
+        // определение ω
+        internal float CalcOmega(float lyambda, float psi1, float j)
+        {
+            return (float)(1/(1 + 0.9 * lyambda * (1 + psi1 + Math.Pow(j,2))));
+        }
+
+        // определение Yф (!!!проверить формулу)
+        internal float CaclYf(float omega, float lyambda, float psi2, float h, double E)
+        {
+            return (float)((1 - omega *(1 + 0.9 * lyambda))*psi2 / Math.Pow(h,3) * E / Math.Pow(10,16));
+        }
+
+        // основные параметры прокладок
+        // эффективная ширина прокладки при b ≤ 1,5 см
+        internal double CaclB0(double b)
+        {
+            return (double)(b /2 );
+        }
+
+        // линейная податливость прокладки (проверить расчет!!!)
+        internal float CalcYp(double hp, double kp, double ep, double b, float dcp, double pi)
+        {
+            return (float)(hp * kp /(ep*b*dcp*pi)* Math.Pow(10,9));
+        }
+
+        // основные параметры болтов
+        // расчётная длина болта
+        internal float CalcLbo(float h, double hp)
+        {
+            return (float)(2 * h + hp);
+        }
+
+        internal float CalcLb(float lbo, float d)
+        {
+            return (float)(lbo + 1.25 * d);
+        }
+
+        // линейная податливость болтов (проверить расчет!!!)
+        internal double CalcYb(float lb, double eb, double fb, float n)
+        {
+            return (float)(lb / (eb * fb * n) * Math.Pow(10, 9));
+        }
+
+        // коэффициент жесткости фланцевых соединений при стыковке одинаковых фланцев Yf1 = Yf и Yf2 = Yf
+        internal float CalcA(float yp, double yb, float yf, float db, float dcp)
+        {
+            return (float)(1/(yp + yb + 1/4 * (yf + yf) * Math.Pow((db - dcp),2)));
+        }
+
+        internal float CalcB1(float yf, float db, float d, float secvivalent)
+        {
+            return (float)(yf * (db - d - secvivalent));
+        }
+
+        internal float CalcB2(float b1)
+        {
+            return (float)(b1);
+        }
+
+        internal float CalcAlf(float a, double yb, float b1, float b2, float db, float dcp)
+        {
+            return (float)(a * (yb + 1/4 * (b1 + b2) * (db -dcp)));
         }
     }
 }
