@@ -295,16 +295,13 @@ namespace FlangeConnection1
 
 
             //Расчет 3
-            richTB.Font = new Font("SegoeUI", 12);
-            richTB.AppendText("Расчет фланца, работающего под внутренним давлением\n");
-            // выделение заголовка и изменение положения и размера
-            SelectRichText(richTB, "Расчет фланца, работающего под внутренним давлением");
-            richTB.SelectionFont = new Font("", 16);
-            richTB.SelectionAlignment = HorizontalAlignment.Center;
-            //1. Определение нагрузок, действующих на фланец.
-            richTB.AppendText("1. Определение нагрузок, действующих на фланец\n");
-            SelectRichText(richTB, "1. Определение нагрузок, действующих на фланец");
+            richTB.AppendText("3. Расчет фланца, работающего под внутренним давлением\n");
+            SelectRichText(richTB, "3. Расчет фланца, работающего под внутренним давлением");
             richTB.SelectionFont = new Font("", 12, FontStyle.Underline);
+
+            //1. Определение нагрузок, действующих на фланец.
+            richTB.AppendText("3.1. Определение нагрузок, действующих на фланец\n");
+            SelectRichText(richTB, "3.1. Определение нагрузок, действующих на фланец");
             //равнодействующая внутреннего давления
             richTB.AppendText($"Равнодействующая внутреннего давления Qd = {Qd} H\n");
             richTB.AppendText($"Реакция прокладки в рабочих условиях Rn = {Rn} H\n");
