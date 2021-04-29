@@ -8,6 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.html;
+using iTextSharp.text.html.simpleparser;
+using System.IO;
+using Font = System.Drawing.Font;
 
 namespace FlangeConnection1
 {
@@ -111,8 +117,51 @@ namespace FlangeConnection1
             CalcAdditionalSize(S, D);
             buCalc.Click += BuCalc_Click;
             buExit.Click += (s, e) => Application.Exit();
-
+            buExport.Click += BuExport_Click;
         }
+
+        private void BuExport_Click(object sender, EventArgs e)
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var enc1252 = Encoding.GetEncoding(1252);
+
+            string ttf = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIAL.TTF");
+            var baseFont = BaseFont.CreateFont(ttf, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var font = new iTextSharp.text.Font(baseFont, iTextSharp.text.Font.DEFAULTSIZE, iTextSharp.text.Font.NORMAL);
+            var fontParag = new iTextSharp.text.Font(baseFont, 20);
+            var fontTitle = new iTextSharp.text.Font(baseFont, 24);
+
+            Document doc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+
+            //string pdfFilePath = @"D:/";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string pdfFilePath = saveFileDialog1.FileName + ".pdf";
+
+                var fs = new FileStream(pdfFilePath, FileMode.Create);
+
+                doc.NewPage();
+                var writer = PdfWriter.GetInstance(doc, fs);
+
+                doc.Open();
+                doc.NewPage();
+
+                using (var stream = new FileStream("Test.pdf", FileMode.Create))
+                {
+                    PdfWriter.GetInstance(doc, stream);
+                    doc.Open();
+
+                    doc.Add(new Paragraph($"{richTB.Text}", font));
+
+                    doc.Close();
+                }
+            }
+
+            
+
+            MessageBox.Show("OK");
+        }
+
         // выполнить расчет
         private void BuCalc_Click(object sender, EventArgs e)
         {
@@ -126,52 +175,53 @@ namespace FlangeConnection1
         private void SetControls()
         {
             // создание верхней панели
-            paTitle = new Guna.UI2.WinForms.Guna2Panel();
             paTitle.Dock = DockStyle.Top;
             paTitle.BackColor = Color.FromArgb(23, 24, 28);
-            paTitle.Width = Screen.PrimaryScreen.Bounds.Width;
+
             // заголовок
-            paTitle.BackColor = Color.FromArgb(23, 24, 28);
             laTitle.ForeColor = Color.White;
-            laTitle.Location = new Point(paTitle.Width / 2 - laTitle.Width / 2, paddingY);
+            laTitle.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - laTitle.Width / 2, paddingY);
+            
             // левая панель
+            //paParams.BackColor = Color.FromName("#f5f7ff");
+            paParams.Dock = DockStyle.Left;
+            paParams.Width = Screen.PrimaryScreen.Bounds.Width / 3;
 
-            paParams.Size = new Size(Screen.PrimaryScreen.Bounds.Width/3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
-            paParams.BackColor = Color.FromName("#f5f7ff");
-            paParams.Location = new Point(0, paTitle.Height);
-
-            laParams.AutoSize = false;
-            laParams.Size = new Size(180, 40);
+            //laParams.AutoSize = false;
+            //laParams.Size = new Size(180, 40);
             laParams.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
 
-            laD.AutoSize = false;
-            laD.Size = new Size(274,27);
+            //laD.AutoSize = false;
+            //laD.Size = new Size(274,27);
             laD.Location = new Point(paddingX, laParams.Location.Y + paddingY*2 + laParams.Height);
 
-            laP.AutoSize = false;
-            laP.Size = new Size(287, 27);
+            //laP.AutoSize = false;
+            //laP.Size = new Size(287, 27);
             laP.Location = new Point(paddingX, laD.Location.Y + paddingY*2 + laD.Height);
 
-            laS.AutoSize = false;
-            laS.Size = new Size(308, 27);
+            //laS.AutoSize = false;
+            //laS.Size = new Size(308, 27);
             laS.Location = new Point(paddingX, laP.Location.Y + paddingY*2 + laP.Height);
             tbD.Location = new Point(paParams.Width - tbD.Width - paddingX, laParams.Location.Y + paddingY * 2 + laParams.Height - tbD.Height/8);
             tbP.Location = new Point(paParams.Width - tbD.Width - paddingX, laD.Location.Y + paddingY * 2 + laD.Height - tbD.Height / 8);
             tbS.Location = new Point(paParams.Width - tbD.Width - paddingX, laP.Location.Y + paddingY * 2 + laP.Height - tbD.Height / 8);
+            
             buCalc.Location = new Point(paParams.Width / 2 - buCalc.Width / 2, paParams.Height - buCalc.Height - paddingY);
+
             // правая панель
             paResults.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3 * 2, paParams.Height);
             paResults.Dock = DockStyle.Right;
-            paResults.BackColor = Color.FromName("#f5f7ff");
+            //paResults.BackColor = Color.FromName("#f5f7ff");
 
-            laRaschet.AutoSize = false;
-            laRaschet.Size = new Size(135, 40);
+            //laRaschet.AutoSize = false;
+            //laRaschet.Size = new Size(135, 40);
             laRaschet.Location = new Point(paResults.Width / 2 - laRaschet.Width / 2, paddingY);
 
             
-            richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, 650);
+            richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height - paTitle.Height - laRaschet.Height - paddingY * 4 - buExport.Height);
             richTB.Location = new Point(paResults.Width / 2 - richTB.Width / 2, laRaschet.Location.Y + laRaschet.Height + paddingY);
-            
+
+            buExport.Location = new Point(paResults.Width / 2 - buExport.Width / 2, richTB.Location.Y + richTB.Height + paddingY);
         }
 
         // определение конструктивных размеров
