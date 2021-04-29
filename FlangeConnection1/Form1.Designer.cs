@@ -29,7 +29,6 @@ namespace FlangeConnection1
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.paTitle = new Guna.UI2.WinForms.Guna2Panel();
             this.buExit = new Guna.UI2.WinForms.Guna2Button();
             this.laTitle = new Guna.UI2.WinForms.Guna2HtmlLabel();
@@ -45,7 +44,6 @@ namespace FlangeConnection1
             this.paResults = new Guna.UI2.WinForms.Guna2Panel();
             this.richTB = new System.Windows.Forms.RichTextBox();
             this.laRaschet = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
             this.paTitle.SuspendLayout();
             this.paParams.SuspendLayout();
             this.paResults.SuspendLayout();
@@ -107,7 +105,8 @@ namespace FlangeConnection1
             this.paParams.Controls.Add(this.laP);
             this.paParams.Controls.Add(this.laD);
             this.paParams.Controls.Add(this.laParams);
-            this.paParams.Location = new System.Drawing.Point(39, 102);
+            this.paParams.Dock = System.Windows.Forms.DockStyle.Left;
+            this.paParams.Location = new System.Drawing.Point(0, 95);
             this.paParams.Margin = new System.Windows.Forms.Padding(4);
             this.paParams.Name = "paParams";
             this.paParams.ShadowDecoration.Parent = this.paParams;
@@ -186,7 +185,7 @@ namespace FlangeConnection1
             // tbP
             // 
             this.tbP.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.tbP.DefaultText = "";
+            this.tbP.DefaultText = "0,1";
             this.tbP.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
             this.tbP.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
             this.tbP.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
@@ -195,6 +194,7 @@ namespace FlangeConnection1
             this.tbP.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.tbP.FocusedState.Parent = this.tbP;
             this.tbP.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.tbP.ForeColor = System.Drawing.Color.Black;
             this.tbP.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.tbP.HoverState.Parent = this.tbP;
             this.tbP.Location = new System.Drawing.Point(369, 148);
@@ -225,12 +225,13 @@ namespace FlangeConnection1
             this.laP.Location = new System.Drawing.Point(19, 158);
             this.laP.Margin = new System.Windows.Forms.Padding(4);
             this.laP.Name = "laP";
-            this.laP.Size = new System.Drawing.Size(287, 27);
+            this.laP.Size = new System.Drawing.Size(344, 27);
             this.laP.TabIndex = 0;
-            this.laP.Text = "Внутреннее давление среды P";
+            this.laP.Text = "Внутреннее давление среды P (МРа)";
             // 
             // laD
             // 
+            this.laD.AutoSize = false;
             this.laD.BackColor = System.Drawing.Color.Transparent;
             this.laD.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.laD.Location = new System.Drawing.Point(19, 91);
@@ -243,11 +244,11 @@ namespace FlangeConnection1
             // laParams
             // 
             this.laParams.BackColor = System.Drawing.Color.Transparent;
-            this.laParams.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.laParams.Location = new System.Drawing.Point(165, 18);
+            this.laParams.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.laParams.Location = new System.Drawing.Point(163, 26);
             this.laParams.Margin = new System.Windows.Forms.Padding(4);
             this.laParams.Name = "laParams";
-            this.laParams.Size = new System.Drawing.Size(180, 40);
+            this.laParams.Size = new System.Drawing.Size(174, 38);
             this.laParams.TabIndex = 0;
             this.laParams.Text = "Параметры";
             // 
@@ -324,7 +325,6 @@ namespace FlangeConnection1
         private Guna.UI2.WinForms.Guna2HtmlLabel laRaschet;
         private Guna.UI2.WinForms.Guna2Button buCalc;
         private Guna.UI2.WinForms.Guna2Button buExit;
-        private Guna.UI2.WinForms.Guna2AnimateWindow guna2AnimateWindow1;
     }
 }
 

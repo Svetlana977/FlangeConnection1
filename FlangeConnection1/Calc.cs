@@ -165,5 +165,53 @@ namespace FlangeConnection1
         {
             return (float)(a * (yb + 1/4 * (b1 + b2) * (db -dcp)));
         }
+        //Равнодействующая внутреннего давления
+        internal float CalcQd(float Dcp,  float p)
+        {
+            return (float)(0.758* Dcp*Dcp*p* Math.Pow(10, 6));
+        }
+        //Реакция прокладки в рабочих условиях!!!
+        internal float CalcRn(float Dcp, double b0, float p, double m)
+        {
+            return (float)(p*2* Math.PI*Dcp*b0*m* Math.Pow(10, 6)); 
+        }
+        //функция линейной податливости болтов
+        internal float Calcy(float A, double yb)
+        {
+            return (float)(yb*A);
+        }
+        //Коэффициент линейного расширения
+        internal float CalcQm(float y, float n, float fб, float Eб, float alfaB, float alfaF, float tB, float tF)
+        {
+            return (float)(y*n*fб*Eб*(alfaF*tF-alfaB*tB));
+        }
+        //Болтовая нагрузка
+        internal float CalcPб1_1(float Dcp, double b0, double q)
+        {
+            return (float)(Math.PI*Dcp*b0*q);
+        }
+        internal float CalcPб1_2(float Wбдоп20, float fб, float n)
+        {
+            return (float)(0.4*Wбдоп20*n*fб);
+        }
+        //Допускаемое напрядения материала болтов
+        internal float CalcWбдоп20(float nm, float Wm)
+        {
+            return (float)((Wm* Math.Pow(10, 6)) /nm);
+        }
+        
+        internal float CalcPб1(float Pб1_2, float Pб1_1)
+        {
+            if(Pб1_2> Pб1_1)
+            {
+                return Pб1_2;
+            }
+            else { return Pб1_1; }
+        }
+        //Болтовая нагрузка в рабочих условиях
+        internal float CalcPб2(float Pб1, float alfa, float Qd, float Rn, float Qm)
+        {
+            return (float)(Pб1+alfa*Qd+Rn+Qm);
+        }
     }
 }

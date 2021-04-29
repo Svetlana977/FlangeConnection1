@@ -21,7 +21,7 @@ namespace FlangeConnection1
         private float Secvivalent; // эквивалентная толщина втулки фланца
         private float bp = (float)(15 / 1e3); // ширина прокладки
         private float tb = (float)(100 / 1e3); // шаг болтов
-        private float p = 1/10; // расчетное избыточное давление
+        private float p = 0.1F; // расчетное избыточное давление
         private float n = 8; // число болтов
         private float fб = 235* (float)Math.Pow(10, -6); // площидь поперечного сечения болта внутри
         private float Eб = 195* (float)Math.Pow(10, 9); // линейная податливость болта
@@ -31,6 +31,15 @@ namespace FlangeConnection1
         public float Df { get; private set; }
         public float Dp { get; private set; }
         public float Dcp { get; private set; }
+        public float Qd { get; private set; }//Равнодействующая внутреннего давления
+        public float Rn { get; private set; }//Реакция прокладки в рабочих условиях
+        public float y; //Функция линейной податливости болта
+        public float Qm; //Коэффициент линейного расширения
+        public float Pб1_1; //Коэффициент линейного расширения
+        public float Pб1_2; 
+        public float Wбдоп20; //Допускаемое напряжение материала болтов
+        public float Pб1; 
+        public float Pб2;//Болтовая нагрузка в робочих условиях 
 
         private float be;
 
@@ -39,7 +48,8 @@ namespace FlangeConnection1
 
         private float h;
         private int betta = 1; // для плоских фланцев
-
+        
+       
         // шестигранная гайка с уменьшенным размером «под ключ» и плоская прокладка
         private float db = (float)(25 / 1e3); // диаметр болта
         private float alfa = (float)(40 / 1e3); // величина, зависящая от типа и размера гайки
@@ -59,7 +69,7 @@ namespace FlangeConnection1
         // угловая податливость фланца
         private float Yf;
         // основные параметры прокладок
-        private double m = 2.5;
+        private float m = 2.5F;
         private double hp = 0.003;
         private double q = 20 * Math.Pow(10, 6);
         private double qdop = 130 * Math.Pow(10, 6);
@@ -80,7 +90,14 @@ namespace FlangeConnection1
         private float B1;
         private float B2;
         private float alf;
-        
+        //Коэффициенты линейного расширения
+        public float alfaB = 11.6F * (float)Math.Pow(10, -6);
+        public float alfaF = 15.3F*(float) Math.Pow(10, -6);
+        public float tB = 62;
+        public float tF = 65;
+        public float nm = 2.8F; // коэффициент запаса прочности
+        public float Wm = 65;//предел текучести материала болтов при 20 град
+
 
         public Form1()
         {
@@ -108,17 +125,35 @@ namespace FlangeConnection1
         // размещение элементов на форме
         private void SetControls()
         {
+            // создание верхней панели
+            paTitle = new Guna.UI2.WinForms.Guna2Panel();
+            paTitle.Dock = DockStyle.Top;
+            paTitle.BackColor = Color.FromArgb(23, 24, 28);
+            paTitle.Width = Screen.PrimaryScreen.Bounds.Width;
             // заголовок
             paTitle.BackColor = Color.FromArgb(23, 24, 28);
             laTitle.ForeColor = Color.White;
-            laTitle.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - laTitle.Width / 15, paddingY);
+            laTitle.Location = new Point(paTitle.Width / 2 - laTitle.Width / 2, paddingY);
             // левая панель
+
             paParams.Size = new Size(Screen.PrimaryScreen.Bounds.Width/3, Screen.PrimaryScreen.Bounds.Height - paTitle.Height);
             paParams.BackColor = Color.FromName("#f5f7ff");
             paParams.Location = new Point(0, paTitle.Height);
+
+            laParams.AutoSize = false;
+            laParams.Size = new Size(180, 40);
             laParams.Location = new Point(paParams.Width / 2 - laParams.Width / 2, paddingY);
+
+            laD.AutoSize = false;
+            laD.Size = new Size(274,27);
             laD.Location = new Point(paddingX, laParams.Location.Y + paddingY*2 + laParams.Height);
+
+            laP.AutoSize = false;
+            laP.Size = new Size(287, 27);
             laP.Location = new Point(paddingX, laD.Location.Y + paddingY*2 + laD.Height);
+
+            laS.AutoSize = false;
+            laS.Size = new Size(308, 27);
             laS.Location = new Point(paddingX, laP.Location.Y + paddingY*2 + laP.Height);
             tbD.Location = new Point(paParams.Width - tbD.Width - paddingX, laParams.Location.Y + paddingY * 2 + laParams.Height - tbD.Height/8);
             tbP.Location = new Point(paParams.Width - tbD.Width - paddingX, laD.Location.Y + paddingY * 2 + laD.Height - tbD.Height / 8);
@@ -128,8 +163,13 @@ namespace FlangeConnection1
             paResults.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 3 * 2, paParams.Height);
             paResults.Dock = DockStyle.Right;
             paResults.BackColor = Color.FromName("#f5f7ff");
+
+            laRaschet.AutoSize = false;
+            laRaschet.Size = new Size(135, 40);
             laRaschet.Location = new Point(paResults.Width / 2 - laRaschet.Width / 2, paddingY);
-            richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, paParams.Height / 4 * 3);
+
+            
+            richTB.Size = new Size(Screen.PrimaryScreen.Bounds.Width / 2, 650);
             richTB.Location = new Point(paResults.Width / 2 - richTB.Width / 2, laRaschet.Location.Y + laRaschet.Height + paddingY);
             
         }
@@ -266,15 +306,17 @@ namespace FlangeConnection1
             SelectRichText(richTB, "1. Определение нагрузок, действующих на фланец");
             richTB.SelectionFont = new Font("", 12, FontStyle.Underline);
             //равнодействующая внутреннего давления
-            richTB.AppendText($"Равнодействующая внутреннего давления\n");
-            richTB.AppendText($"Реакция прокладки в рабочих условиях\n");
-            richTB.AppendText($"Усилие, возникающее от температурных деформаций\n");
-            richTB.AppendText($"Кэффициенты линейного расширения\n");
-            richTB.AppendText($"Болтовая нагрузка в условиях монтажа до подачи внутреннего давления\n");
-            richTB.AppendText($"Коэффициент запаса прочности для болтов\n");
+            richTB.AppendText($"Равнодействующая внутреннего давления Qd = {Qd} H\n");
+            richTB.AppendText($"Реакция прокладки в рабочих условиях Rn = {Rn} H\n");
+            richTB.AppendText($"Кэффициенты линейного расширения Qm = {Qm} Н\n");
+            richTB.AppendText($"Болтовая нагрузка в условиях монтажа до подачи внутреннего давления Pб1_1 = {Pб1_1} Н\n");
+            richTB.AppendText($"Коэффициент запаса прочности для болтов  \n");
+            richTB.AppendText($"Wбдоп20 = {Wбдоп20} Па\n");
+            richTB.AppendText($" Pб1_2 = {Pб1_2} H\n");
+            richTB.AppendText($"Pб = {Pб1} H\n");
             richTB.AppendText($"Предел текучести материала болтов при 20 град.\n");
             richTB.AppendText($"Допускаемое напряжение материала болтов\n");
-            richTB.AppendText($"Болтовая нагрузка в рабочих условиях\n");
+            richTB.AppendText($"Болтовая нагрузка в рабочих условиях Pб2 = {Pб2} Н\n");
             richTB.AppendText($"Приведенный изгибающий момент\n");
             richTB.AppendText($"Предел текучести материала болтов при 62 град.\n");
             richTB.AppendText($"Допускаемое напряжение болтов\n");
@@ -311,7 +353,7 @@ namespace FlangeConnection1
         private void SetParams()
         {
             S = (float)(Convert.ToInt32(tbS.Text) / 1e3);
-            //P = Convert.ToInt32(tbP.Text);
+            P = (float)Convert.ToDouble(tbP.Text);
             D = (float)(Convert.ToInt32(tbD.Text) / 1e3);
         }
 
@@ -356,6 +398,8 @@ namespace FlangeConnection1
             // ориентировочная толщина фланца
             h = calc.Calch(lyambda, Secvivalent, d);
 
+            
+
         }
 
         // расчет вспомогательных величин
@@ -395,7 +439,19 @@ namespace FlangeConnection1
             B2 = calc.CalcB2(B1);
             alf = calc.CalcAlf(A, yb, B1, B2, Db, Dcp);
 
+            //равнодействующая внутреннего давоения 
+            Qd = calc.CalcQd(Dcp, p);
 
+            //Реакция прокладки в рабочих условиях
+            Rn = calc.CalcRn(Dcp,m,p,b0);
+
+            y = calc.Calcy(A, yb);
+            Qm = calc.CalcQm(y,n,fб,Eб,alfaB,alfaF,tB,tF);
+            Pб1_1 = calc.CalcPб1_1(Dcp,b0,q);
+            Pб1_2 = calc.CalcPб1_1(n,fb, Wбдоп20);
+            Wбдоп20 = calc.CalcWбдоп20(nm,Wm);
+            Pб1 = calc.CalcPб1(Pб1_2, Pб1_1);
+            Pб2 = calc.CalcPб2(alfa, Qd,Rn,Qm, Pб1);
         }
 
     }
