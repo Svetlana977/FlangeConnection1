@@ -95,8 +95,20 @@ namespace FlangeConnection1
         public float alfaF = 15.3F*(float) Math.Pow(10, -6);
         public float tB = 62;
         public float tF = 65;
-        public float nm = 2.8F; // коэффициент запаса прочности
+        public float nт = 2.8F; // коэффициент запаса прочности
+        public float qt = 213.2F; // предел текучести материала болтов при 62 град
         public float Wm = 65;//предел текучести материала болтов при 20 град
+        public float M01; //Приведенный изгибающий момент
+        public float qбдопt; //допускаемое напряжение материала болтов
+        public float M02; //хз
+        public float M0; //хз
+        public float qб1; //хз
+        public float qб2; //хз
+        public string ConditionA = " ";// условий прочности σ.б1 ≤ σ.бдоп20 
+        public string ConditionB = " ";// условий прочности σ.б2≤σ.бдопt 
+        public float ss = 0.2F; // коэффициент, зависящий от состояния поверхности и смазки
+        public float Mкр;
+
 
 
         public Form1()
@@ -119,6 +131,7 @@ namespace FlangeConnection1
             SetParams();
             CalcConstructionSize(S, D);
             CalcAdditionalSize(S, D);
+            CalcAdditional(S, D);
             CreateReport();
         }
 
@@ -307,16 +320,22 @@ namespace FlangeConnection1
             richTB.AppendText($"Реакция прокладки в рабочих условиях Rn = {Rn} H\n");
             richTB.AppendText($"Кэффициенты линейного расширения Qm = {Qm} Н\n");
             richTB.AppendText($"Болтовая нагрузка в условиях монтажа до подачи внутреннего давления Pб1_1 = {Pб1_1} Н\n");
-            richTB.AppendText($"Коэффициент запаса прочности для болтов  \n");
             richTB.AppendText($"Wбдоп20 = {Wбдоп20} Па\n");
             richTB.AppendText($" Pб1_2 = {Pб1_2} H\n");
             richTB.AppendText($"Pб = {Pб1} H\n");
-            richTB.AppendText($"Предел текучести материала болтов при 20 град.\n");
-            richTB.AppendText($"Допускаемое напряжение материала болтов\n");
-            richTB.AppendText($"Болтовая нагрузка в рабочих условиях Pб2 = {Pб2} Н\n");
-            richTB.AppendText($"Приведенный изгибающий момент\n");
-            richTB.AppendText($"Предел текучести материала болтов при 62 град.\n");
-            richTB.AppendText($"Допускаемое напряжение болтов\n");
+            richTB.AppendText($"Допускаемое напряжение материала болтов Wбдоп20 = {Wбдоп20}\n");
+            richTB.AppendText($"Болтовая нагрузка в рабочих условиях Pб2 = {Pб2} Гн\n");
+            richTB.AppendText($"Приведенный изгибающий момент M01 = {M01} Гн*м\n");
+            richTB.AppendText($"Допускаемое напряжение болтов qбдопt = {qбдопt} //// {qб2}Па\n");
+            richTB.AppendText($"M02 = {M02} Гн*м\n");
+            richTB.AppendText($"M0 = {M0} Гн*м\n");
+            richTB.AppendText("3.2. Условия прочности болтов\n");
+            SelectRichText(richTB, "3.2. Условия прочности болтов");
+            richTB.AppendText($"а) Условие прочности σ.б1 ≤ σ.бдоп20 {ConditionA}\n");
+            richTB.AppendText($"б Условие прочности σ.б2≤σ.бдопt {ConditionB}\n");
+            richTB.AppendText("3.3. Крутящий момент на ключе при затяжке болтов\n");
+            SelectRichText(richTB, "3.3. Крутящий момент на ключе при затяжке болтов");
+            richTB.AppendText($"Mкр = {Mкр} ГН*м\n");
         }
 
        
@@ -350,7 +369,7 @@ namespace FlangeConnection1
         private void SetParams()
         {
             S = (float)(Convert.ToInt32(tbS.Text) / 1e3);
-            P = (float)Convert.ToDouble(tbP.Text);
+            P = (float)(Convert.ToDouble(tbP.Text)* 1e3);
             D = (float)(Convert.ToInt32(tbD.Text) / 1e3);
         }
 
@@ -436,19 +455,33 @@ namespace FlangeConnection1
             B2 = calc.CalcB2(B1);
             alf = calc.CalcAlf(A, yb, B1, B2, Db, Dcp);
 
+           
+        }
+        private void CalcAdditional(float s, float d)
+        {
             //равнодействующая внутреннего давоения 
             Qd = calc.CalcQd(Dcp, p);
 
             //Реакция прокладки в рабочих условиях
-            Rn = calc.CalcRn(Dcp,m,p,b0);
+            Rn = calc.CalcRn(Dcp, m, p, b0);
 
             y = calc.Calcy(A, yb);
-            Qm = calc.CalcQm(y,n,fб,Eб,alfaB,alfaF,tB,tF);
-            Pб1_1 = calc.CalcPб1_1(Dcp,b0,q);
-            Pб1_2 = calc.CalcPб1_1(n,fb, Wбдоп20);
-            Wбдоп20 = calc.CalcWбдоп20(nm,Wm);
+            Qm = calc.CalcQm(y, n, fб, Eб, alfaB, alfaF, tB, tF);
+            Pб1_1 = calc.CalcPб1_1(Dcp, b0, q);
+            Pб1_2 = calc.CalcPб1_1(n, fb, Wбдоп20);
+            Wбдоп20 = calc.CalcWбдоп20(nт, Wm);
             Pб1 = calc.CalcPб1(Pб1_2, Pб1_1);
-            Pб2 = calc.CalcPб2(alfa, Qd,Rn,Qm, Pб1);
+            Pб2 = calc.CalcPб2(alfa, Qd, Rn, Qm, Pб1);
+            M01 = calc.CalcM01(Pб1, Db, Dcp);
+            qбдопt = calc.CalcQбдопt(qt, nт);
+            qб2 = calc.CalcQб2( Pб2,  n, fб);
+            M02 = calc.CalcM02(qt, nт);
+            M0 = calc.CalcM0(M01, M02);
+            qб1 = calc.CalcQб1(Pб1, n, fб);
+            ConditionA = calc.CalcConditionA(qб1, Wбдоп20);
+            qб2 = calc.CalcQб2(Pб2, n, fб);
+            ConditionB = calc.CalcConditionB(qб2, qбдопt);
+            Mкр = calc.CalcMкр(Pб1, db, ss, n); 
         }
 
     }
