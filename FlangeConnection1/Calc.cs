@@ -195,9 +195,9 @@ namespace FlangeConnection1
             return (float)(0.4*Wбдоп20*n*fб);
         }
         //Допускаемое напрядения материала болтов
-        internal float CalcWбдоп20(float nm, float Wm)
+        internal float CalcWбдоп20(float nт, float Wm)
         {
-            return (float)((Wm* Math.Pow(10, 6)) /nm);
+            return (float)((Wm* Math.Pow(10, 6)) /nт);
         }
         
         internal float CalcPб1(float Pб1_2, float Pб1_1)
@@ -212,6 +212,63 @@ namespace FlangeConnection1
         internal float CalcPб2(float Pб1, float alfa, float Qd, float Rn, float Qm)
         {
             return (float)(Pб1+alfa*Qd+Rn+Qm);
+        }
+        internal float CalcM01(float Pб1, float Db, float Dcp)
+        {
+            return (float)(Pб1 * (Db - Dcp) / 2);
+        }
+        internal float CalcQбдопt(float qt, float nт)
+        {
+            return (float)(qt/nт* Math.Pow(10, 6));
+        }
+        internal float CalcM02(float qt, float nт)
+        {
+            return (float)(qt / nт * Math.Pow(10, 6));
+        }
+        internal float CalcM0(float M01, float M02)
+        {
+            if (M01 > M02)
+            {
+                return M01;
+            }
+            else { return M02; }
+        }
+        internal float CalcQб1(float Pб1, float n, float fб)
+        {
+            return (float)(Pб1 / (n * fб));
+        }
+        //Условия прочности
+        //σ.б1 ≤ σ.бдоп20
+        public string CalcConditionA(float qб1, float Wбдоп20)
+        {
+            if (qб1 <= Wбдоп20)
+            {
+                return  "выполняется";
+            } else
+            {
+                return "не выполняется";
+            }
+        }
+        internal float CalcQб2(float Pб2, float n, float fб)
+        {
+            return (float)(Pб2 / (n * fб));
+        }
+        //σ.б2≤σ.бдопt
+        public string CalcConditionB(float qб2, float qбдопt)
+        {
+            if (qб2 <= qбдопt)
+            {
+                return "выполняется";
+            }
+            else
+            {
+                return "не выполняется";
+            }
+        }
+        //Крутящий момент на ключе при затяжке болтов
+        internal float CalcMкр(float Pб1, float bd, float n, float ss)
+        {
+            return (float)(ss * Pб1 * bd / n);
         }
     }
 }
