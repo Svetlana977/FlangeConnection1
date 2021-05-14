@@ -22,7 +22,7 @@ namespace FlangeConnection1
         }
 
         // окончательное число болтов
-        public int CalcFinallyZb(float zb)      // число болтов кратное 4 
+        public int CalcFinallyn(float zb)      // число болтов кратное 4 
         {
             zb = Convert.ToInt32(Math.Ceiling(zb));
             while (zb % 4 != 0)
@@ -31,7 +31,7 @@ namespace FlangeConnection1
         }
 
         // ориентировочное число болтов
-        public float CalcZb(float db, float tb)
+        public float Calcn(float db, float tb)
         {
             return (float)(Math.PI * db / tb);
         }
@@ -39,7 +39,10 @@ namespace FlangeConnection1
         // эффективная ширина прокладки
         public float Calcbe(float bp)
         {
-            return (float)(0.5 * bp);
+            if (bp <= 15)
+                return (float)(0.5 * bp);
+            else
+                return (float)(0.6 * Math.Sqrt(bp));
         }
 
         // средний диаметр прокладки

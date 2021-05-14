@@ -38,7 +38,7 @@ namespace FlangeConnection1.Tests
             float expected = 15.7F;
 
             Calc calc = new Calc();
-            float actual = calc.CalcZb(db, tb);
+            float actual = calc.Calcn(db, tb);
 
             Assert.AreEqual(expected, actual, 0.01);
         }

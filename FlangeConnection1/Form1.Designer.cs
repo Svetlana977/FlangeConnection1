@@ -104,7 +104,7 @@ namespace FlangeConnection1
             // tbD
             // 
             this.tbD.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.tbD.DefaultText = "400";
+            this.tbD.DefaultText = "147";
             this.tbD.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
             this.tbD.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
             this.tbD.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
@@ -121,7 +121,6 @@ namespace FlangeConnection1
             this.tbD.PasswordChar = '\0';
             this.tbD.PlaceholderText = "";
             this.tbD.SelectedText = "";
-            this.tbD.SelectionStart = 3;
             this.tbD.ShadowDecoration.Parent = this.tbD;
             this.tbD.Size = new System.Drawing.Size(97, 36);
             this.tbD.TabIndex = 1;
@@ -129,7 +128,7 @@ namespace FlangeConnection1
             // tbS
             // 
             this.tbS.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.tbS.DefaultText = "12";
+            this.tbS.DefaultText = "6";
             this.tbS.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
             this.tbS.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
             this.tbS.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
@@ -146,7 +145,6 @@ namespace FlangeConnection1
             this.tbS.PasswordChar = '\0';
             this.tbS.PlaceholderText = "";
             this.tbS.SelectedText = "";
-            this.tbS.SelectionStart = 2;
             this.tbS.ShadowDecoration.Parent = this.tbS;
             this.tbS.Size = new System.Drawing.Size(97, 36);
             this.tbS.TabIndex = 1;

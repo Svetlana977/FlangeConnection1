@@ -25,10 +25,9 @@ namespace FlangeConnection1
         private float S0; // меньшая толщина конической втулки фланца
         private float S1; // большая толщина втулки фланца
         private float Secvivalent; // эквивалентная толщина втулки фланца
-        private float bp = (float)(15 / 1e3); // ширина прокладки
+        private float bp = (float)(12 / 1e3); // ширина прокладки
         private float tb = (float)(100 / 1e3); // шаг болтов
         private float p = 0.1F; // расчетное избыточное давление
-        private float n = 8; // число болтов
         private float fб = 235* (float)Math.Pow(10, -6); // площидь поперечного сечения болта внутри
         private float Eб = 195* (float)Math.Pow(10, 9); // линейная податливость болта
         //private float ; // 
@@ -49,8 +48,8 @@ namespace FlangeConnection1
 
         private float be;
 
-        public float ZbOrientir { get; private set; } // ориентировочное число болтов
-        public float Zb { get; private set; } // окончательное число болтов
+        public float nOrientir { get; private set; } // ориентировочное число болтов
+        public float n { get; private set; } // окончательное число болтов
 
         private float h;
         private int betta = 1; // для плоских фланцев
@@ -171,7 +170,7 @@ namespace FlangeConnection1
 
             
 
-            MessageBox.Show("OK");
+            MessageBox.Show("Файл сохранен");
         }
 
         // выполнить расчет
@@ -288,14 +287,9 @@ namespace FlangeConnection1
             richTB.AppendText($"Эффективная ширина прокладки bе");
             BottomIndex(1);
             richTB.AppendText($": = {be} м\n");
-            richTB.AppendText($"Ориентировочное число болтов (шпилек), примем tб");
-            BottomIndex(1);
-            richTB.AppendText($" = {tb} м: Zб");
-            BottomIndex(1);
-            richTB.AppendText($" = {ZbOrientir}\n");
-            richTB.AppendText($"Окончательное число болтов: Zб");
-            BottomIndex(1);
-            richTB.AppendText($" = {Zb} шт.\n");
+            richTB.AppendText($"Примем шаг болтов = {tb} м\n");
+            richTB.AppendText($"Ориентировочное число болтов: n = {nOrientir}\n");
+            richTB.AppendText($"Окончательное число болтов: n = {n} шт.\n");
             richTB.AppendText($"Ориентировочная толщина фланца: h = {h} м\n");
 
 
@@ -432,6 +426,7 @@ namespace FlangeConnection1
                 MessageBox.Show("Введите другое значение толщины стенки");
             }
 
+            // большая толщина втулки фланца
             S1 = betta * S0;
             Secvivalent = S0;
 
@@ -451,10 +446,10 @@ namespace FlangeConnection1
             be = calc.Calcbe(bp);
 
             // ориентировочное число болтов
-            ZbOrientir = calc.CalcZb(Db, tb);
+            nOrientir = calc.Calcn(Db, tb);
 
             // окончательное число болтов
-            Zb = calc.CalcFinallyZb(ZbOrientir);
+            n = calc.CalcFinallyn(nOrientir);
 
             // определение коэффициента лямбда
             lyambda = calc.CalcLyambda();
