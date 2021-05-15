@@ -59,7 +59,7 @@ namespace FlangeConnection1
             this.paTitle.Margin = new System.Windows.Forms.Padding(4);
             this.paTitle.Name = "paTitle";
             this.paTitle.ShadowDecoration.Parent = this.paTitle;
-            this.paTitle.Size = new System.Drawing.Size(1065, 95);
+            this.paTitle.Size = new System.Drawing.Size(1317, 95);
             this.paTitle.TabIndex = 0;
             // 
             // buExit
@@ -72,7 +72,7 @@ namespace FlangeConnection1
             this.buExit.ForeColor = System.Drawing.Color.White;
             this.buExit.HoverState.ForeColor = System.Drawing.Color.Red;
             this.buExit.HoverState.Parent = this.buExit;
-            this.buExit.Location = new System.Drawing.Point(1016, 0);
+            this.buExit.Location = new System.Drawing.Point(1268, 0);
             this.buExit.Margin = new System.Windows.Forms.Padding(4);
             this.buExit.Name = "buExit";
             this.buExit.ShadowDecoration.Parent = this.buExit;
@@ -110,7 +110,7 @@ namespace FlangeConnection1
             this.paParams.Margin = new System.Windows.Forms.Padding(4);
             this.paParams.Name = "paParams";
             this.paParams.ShadowDecoration.Parent = this.paParams;
-            this.paParams.Size = new System.Drawing.Size(505, 459);
+            this.paParams.Size = new System.Drawing.Size(505, 581);
             this.paParams.TabIndex = 1;
             // 
             // buCalc
@@ -203,6 +203,7 @@ namespace FlangeConnection1
             this.tbP.PasswordChar = '\0';
             this.tbP.PlaceholderText = "";
             this.tbP.SelectedText = "";
+            this.tbP.SelectionStart = 3;
             this.tbP.ShadowDecoration.Parent = this.tbP;
             this.tbP.Size = new System.Drawing.Size(129, 44);
             this.tbP.TabIndex = 1;
@@ -290,7 +291,7 @@ namespace FlangeConnection1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1065, 554);
+            this.ClientSize = new System.Drawing.Size(1317, 676);
             this.Controls.Add(this.paResults);
             this.Controls.Add(this.paParams);
             this.Controls.Add(this.paTitle);
